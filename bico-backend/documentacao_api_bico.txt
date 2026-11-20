@@ -1,0 +1,182 @@
+========================================================================
+DOCUMENTAÇÃO COMPLETA DA API - BICO BACKEND
+========================================================================
+
+URL Base (Servidor Local): http://localhost:8080
+Observação: Para testar no celular físico via Expo Go, substitua 
+"localhost" pelo endereço IPv4 do computador onde o Java está rodando.
+
+------------------------------------------------------------------------
+1. USUÁRIOS (/usuarios)
+------------------------------------------------------------------------
+
+[POST] /usuarios
+Função: Cadastra um novo usuário no sistema.
+Retorno de Sucesso: 201 Created (Retorna o usuário com o ID gerado).
+Retorno de Erro: 400 Bad Request (Se e-mail, CPF ou apelido já existirem).
+Exemplo de JSON para enviar:
+{
+  "nome": "João Silva",
+  "apelido": "joaosilva",
+  "cpf": "12345678901",
+  "email": "joao@email.com",
+  "telefone": "45999998888",
+  "senha": "123"
+}
+
+[POST] /usuarios/login
+Função: Valida e-mail e senha e retorna os dados para a sessão do app.
+Retorno de Sucesso: 200 OK (Retorna o objeto do usuário com o ID, sem a senha).
+Retorno de Erro: 401 Unauthorized (Se e-mail ou senha estiverem incorretos).
+Exemplo de JSON para enviar:
+{
+  "email": "joao@email.com",
+  "senha": "123"
+}
+
+[GET] /usuarios
+Função: Lista todos os usuários cadastrados.
+Retorno de Sucesso: 200 OK.
+
+[GET] /usuarios/{id}
+Função: Busca os dados de um usuário específico pelo ID.
+Retorno de Sucesso: 200 OK.
+Retorno de Erro: 404 Not Found (Se o ID não existir).
+
+[GET] /usuarios/apelido/{apelido}
+Função: Busca um usuário específico pelo seu apelido único.
+Retorno de Sucesso: 200 OK.
+Retorno de Erro: 404 Not Found (Se o apelido não existir).
+
+[PUT] /usuarios/{id}
+Função: Atualiza os dados cadastrais de um usuário existente.
+Observação: Se enviar "senha": "" ou omitir o campo, a senha atual é mantida.
+Retorno de Sucesso: 200 OK.
+Exemplo de JSON para enviar:
+{
+  "nome": "João Silva Atualizado",
+  "apelido": "joaosilva",
+  "cpf": "12345678901",
+  "email": "joao@email.com",
+  "telefone": "45988887777",
+  "senha": ""
+}
+
+[DELETE] /usuarios/{id}
+Função: Remove um usuário do banco de dados.
+Retorno de Sucesso: 204 No Content.
+
+------------------------------------------------------------------------
+2. CATEGORIAS (/categorias)
+------------------------------------------------------------------------
+
+[GET] /categorias
+Função: Lista todas as categorias de serviços disponíveis.
+Retorno de Sucesso: 200 OK.
+
+[GET] /categorias/{id}
+Função: Busca uma categoria específica pelo ID.
+Retorno de Sucesso: 200 OK.
+
+[POST] /categorias
+Função: Cria uma nova categoria (bloqueia nomes duplicados).
+Retorno de Sucesso: 201 Created.
+Exemplo de JSON para enviar:
+{
+  "nome": "Elétrica e Manutenção"
+}
+
+[PUT] /categorias/{id}
+Função: Atualiza o nome de uma categoria existente.
+Retorno de Sucesso: 200 OK.
+Exemplo de JSON para enviar:
+{
+  "nome": "Elétrica Residencial"
+}
+
+[DELETE] /categorias/{id}
+Função: Exclui uma categoria.
+Retorno de Sucesso: 204 No Content.
+
+------------------------------------------------------------------------
+3. SOLICITAÇÕES DE SERVICO (/solicitacoes)
+------------------------------------------------------------------------
+
+[GET] /solicitacoes
+Função: Lista todas as solicitações cadastradas (Feed geral).
+Retorno de Sucesso: 200 OK.
+
+[GET] /solicitacoes/{id}
+Função: Busca os detalhes de uma solicitação específica pelo ID.
+Retorno de Sucesso: 200 OK.
+
+[GET] /solicitacoes/usuario/{idUsuario}
+Função: Lista todas as solicitacoes criadas por um usuario especifico.
+Retorno de Sucesso: 200 OK.
+
+[GET] /solicitacoes/categoria/{idCategoria}
+Função: Filtra solicitações por uma categoria específica.
+Retorno de Sucesso: 200 OK.
+
+[POST] /solicitacoes
+Função: Cria um novo pedido de serviço vinculando usuário e categoria.
+Retorno de Sucesso: 201 Created.
+Exemplo de JSON para enviar:
+{
+  "descricao": "Preciso trocar a fiação do chuveiro urgente",
+  "dataSolicitacao": "15/11/2026",
+  "horaSolicitacao": "14:00",
+  "localSolicitacao": "Centro, Cascavel - PR",
+  "propostaValor": 120.50,
+  "usuario": {
+    "id": 1
+  },
+  "categoria": {
+    "id": 1
+  }
+}
+
+[PUT] /solicitacoes/{id}
+Função: Atualiza os dados de uma solicitação existente.
+Retorno de Sucesso: 200 OK.
+Exemplo de JSON para enviar:
+{
+  "descricao": "Troca de fiação e disjuntor do chuveiro",
+  "dataSolicitacao": "16/11/2026",
+  "horaSolicitacao": "10:00",
+  "localSolicitacao": "Centro, Cascavel - PR",
+  "propostaValor": 150.00,
+  "categoria": {
+    "id": 1
+  }
+}
+
+[DELETE] /solicitacoes/{id}
+Função: Exclui uma solicitacao.
+Retorno de Sucesso: 204 No Content.
+
+------------------------------------------------------------------------
+4. CONTATOS (/contatos)
+------------------------------------------------------------------------
+
+[GET] /contatos/usuario/{idUsuario}
+Função: Lista todos os contatos salvos pelo usuário logado.
+Retorno de Sucesso: 200 OK.
+
+[POST] /contatos
+Função: Adiciona um usuário à lista de contatos (bloqueia duplicados).
+Retorno de Sucesso: 201 Created.
+Exemplo de JSON para enviar:
+{
+  "usuarioPrincipal": {
+    "id": 1
+  },
+  "usuarioContato": {
+    "id": 2
+  },
+  "apelidoContato": "João Eletricista"
+}
+
+[DELETE] /contatos/{id}
+Função: Remove um contato da lista.
+Retorno de Sucesso: 204 No Content.
